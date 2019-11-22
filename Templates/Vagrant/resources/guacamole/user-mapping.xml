@@ -1,0 +1,42 @@
+<user-mapping>
+    <authorize username="GUACAMOLE_USERNAME" password="GUACAMOLE_PASSWORD">
+
+        <connection name="logger">
+            <protocol>ssh</protocol>
+            <param name="hostname">LOGGER_IP_ADDRESS</param>
+            <param name="port">22</param>
+            <param name="username">vagrant</param>
+            <param name="password">vagrant</param>
+        </connection>
+
+        <connection name="wef">
+            <protocol>rdp</protocol>
+            <param name="hostname">WEF_IP_ADDRESS</param>
+            <param name="port">3389</param>
+            <param name="security">nla</param>
+            <param name="username">PROVISION_USER</param>
+            <param name="password">PROVISION_PASSWORD</param>
+            <param name="ignore-cert">true</param>
+        </connection>
+
+        <connection name="win10">
+            <protocol>rdp</protocol>
+            <param name="hostname">WKSTN_IP_ADDRESS</param>
+            <param name="port">3389</param>
+            <param name="security">nla</param>
+            <param name="username">PROVISION_USER</param>
+            <param name="password">PROVISION_PASSWORD</param>
+            <param name="ignore-cert">true</param>
+        </connection>
+
+        <connection name="dc">
+            <protocol>rdp</protocol>
+            <param name="hostname">DC_IP_ADDRESS</param>
+            <param name="port">3389</param>
+            <param name="security">nla</param>
+            <param name="username">PROVISION_USER</param>
+            <param name="password">PROVISION_PASSWORD</param>
+            <param name="ignore-cert">true</param>
+        </connection>
+    </authorize>
+</user-mapping> 
