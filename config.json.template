@@ -1,0 +1,60 @@
+{ 
+	"provision": {
+		"__comment__": "Packer, Vagrant and Terraform variables", 
+		"provider": "vmware",
+		"PROVISION_USER": "vagrant", 
+		"PROVISION_PASSWORD": "vagrant",
+		"PROVISION_DISPLAYNAME": "DetectionLab Admin",
+		"PROVISION_ORG_NAME": "Detection Lab",
+		"PROVISION_WIN10_ISO": "https://software-download.microsoft.com/download/pr/18362.30.190401-1528.19h1_release_svc_refresh_CLIENTENTERPRISEEVAL_OEMRET_x64FRE_en-us.iso",
+		"PROVISION_WIN2016_ISO": "https://software-download.microsoft.com/download/pr/Windows_Server_2016_Datacenter_EVAL_en-us_14393_refresh.ISO",
+		"PROVISION_WHITELIST_IP": "1.1.1.1/32",
+		"PROVISION_SSH_KEY": "/home/user/.ssh/id_logger",
+		"PROVISION_SSH_KEY_NAME": "id_logger", 
+		"PROVISION_SSH_KEY_PUB": "/home/user/.ssh/id_logger.pub", 
+		"PROVISION_AWS_CREDENTIALS_FILE": "/home/user/.aws/credentials",
+		"PROVISION_AWS_PROFILE": "terraform",
+		"PROVISION_AWS_REGION": "us-east-1"
+	},
+
+	"vagrant": { 
+		"VAGRANT_WIN10_BOX": "detectionlab/win10",
+		"VAGRANT_WIN2016_BOX": "detectionlab/win2016",
+		"VAGRANT_UBUNTU_BOX": "bento/ubuntu-16.04"
+	},
+
+	"domain": { 
+		"__comment__": "Currently not supported - DONT CHANGE THESE", 
+		"DOMAIN_NAME": "windomain.local", 
+		"DOMAIN_NETBIOS": "windomain",
+		"DOMAIN_DN": "DC=windomain,DC=local"
+	},
+
+	"analyst": { 
+		"__comment__": "Analyst Account Credentials",
+		"KOLIDE_ADMIN_PASSWORD": "admin123#",
+		"SPLUNK_ADMIN_PASSWORD": "changeme",
+		"GUACAMOLE_USERNAME": "vagrant",
+		"GUACAMOLE_PASSWORD": "vagrant",
+		"LOGGER_SSH_USERNAME": "vagrant",
+		"LOGGER_SSH_PASSWORD": "vagrant"
+	},
+
+	"network": { 
+		"__comment__": "Network Range Configuration",
+		"VPC_IP_CIDR": "192.168.0.0/16",
+		"LAB_IP_CIDR": "192.168.38.0/24",
+		"LAB_IP_PREFIX": "192.168.38",
+		"LAB_NETMASK": "255.255.255.0",
+		"LAB_GATEWAY" : "192.168.38.1",
+		"LAB_EXTDNS": "8.8.8.8"
+	}, 
+
+	"hosts": { 
+		"__comment__": "Host network configuration",
+		"DC_IP_ADDRESS": "192.168.138.102",
+		"WEF_IP_ADDRESS": "192.168.38.103",
+		"LOGGER_IP_ADDRESS": "192.168.38.105",
+		"WKSTN_IP_ADDRESS" : "192.168.38.104"
+	}
+}
