@@ -15,7 +15,6 @@ Changes:
 ToDo:
 * Use Jinja2/ proper templating instead of hackish python find and replace
 * Find a way to modify registry.pol files to replace hardcoded windomain.local domain
-* 
 
 ## Building from Scratch
 
@@ -28,7 +27,7 @@ pip3 install -r requirements.txt
 
 ### Download Windows Enterprise Trial ISOs
 
-Optional step if you prefer to have the ISOs local and not download them every time. If you do this, be sure to change the ISO paths in the config.json file to the file:/// path of the
+Optional step if you prefer to have the ISOs local and not download them every time. If you do this, be sure to change the ISO paths in the config.json file to the file:/// path of the ISO.
 
 Run the download script: 
 
@@ -42,10 +41,10 @@ Copy the `config.json.template` file to `config.json` and change variables accor
 
 **DO NOT modify domain name variables... some GPO registry options have hardcoded domain names**
 
-Run the configuration script:
+Run the configuration script.
 
 ```
-./configure.py -c config.json 2>/dev/null
+./detectionlab.py --configure 2>/dev/null
 
 ```
 
