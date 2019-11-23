@@ -115,8 +115,8 @@ def replace_analystlogin_vars(config_json):
 def create_s3_bucket():
     pass
 
-def download_file(url):
-    local_filename = url.split('/')[-1]
+def download_file(url, filename):
+    local_filename = filename
     with requests.get(url, stream=True) as r:
         with open(local_filename, 'wb') as f:
             shutil.copyfileobj(r.raw, f)
@@ -142,10 +142,10 @@ def do_download():
     windows_10_iso = "https://software-download.microsoft.com/download/pr/18362.30.190401-1528.19h1_release_svc_refresh_CLIENTENTERPRISEEVAL_OEMRET_x64FRE_en-us.iso"
 
     print("[+] Downloading Windows 10 Enterprise Eval ISO")
-    download_file(windows_10_iso)
+    download_file(windows_10_iso, "./iso/windows_10.iso")
 
     print("[+] Downloading Windows Server 2016 Eval ISO")
-    download_file(windows_2016_iso)
+    download_file(windows_2016_iso, "./iso/windows_2016.iso")
 
 
 if __name__ == '__main__':
