@@ -32,7 +32,7 @@ Optional step if you prefer to have the ISOs local and not download them every t
 Run the download script: 
 
 ```
-./detectionlab.py --download-iso
+./detectionlab.py iso-download -d ./iso
 ```
 
 ### Configure the environment
@@ -44,7 +44,7 @@ Copy the `config.json.template` file to `config.json` and change variables accor
 Run the configuration script.
 
 ```
-./detectionlab.py --configure 2>/dev/null
+./detectionlab.py configure -c config.json
 
 ```
 
@@ -95,17 +95,37 @@ vagrant up win10
 If additional installations can be automated either during the Packer or Vagrant build process, do that, but if not,
 t his is a good place to stop and add anything additional to the lab boxes... EDR Agents, Microsoft Office, etc. 
 
+Optionally, if you'd like to plan to export logger VM for local use, clear the Splunk index data with `/opt/splunk/bin/splunk clean eventdata`
+
 ### Export Vagrant Boxes to OVA
 
 Export the boxes to OVA files so we can upload to S3 and deploy with Terraform magic.
 
-Shut down the VMs in VirtualBox or VMWare. 
-Snapshot the Windows VMs.
-Export each VM as its own OVA file.
+1. Shut down the VMs in VirtualBox or VMWare. 
+2. Snapshot the Windows VMs.
+3. Export each VM as its own OVA file.
 
 ### Upload OVAs to S3 as AMIs.
 
-To Do 
+1. Create the S3 bucket using the name provided in the `config.json` file:
+    ```
+    ./detectionlab.py s3-manage --create 
+    ```
+
+2. Upload the OVA images to the configured S3 bucket:
+    ```
+    ./detectionlab.py ova-to-s3 -o /path/to/win10.ova -d win10.ova
+    ./detectionlab.py ova-to-s3 -o /path/to/dc.ova -d dc.ova
+    ./detectionlab.py ova-to-s3 -o /path/to/wef.ova -d wef.ova
+    ```
+
+3. Import the images as AMIs:
+
+    ```
+    aws ec2 import-image --description "dc" --license-type byol --disk-containers file:///path/to/DetectionLab/Working/Terraform/vm_import/dc.json
+    aws ec2 import-image --description "wef" --license-type byol --disk-containers file:///path/to/DetectionLab/Working/Terraform/vm_import/wef.json
+    aws ec2 import-image --description "win10" --license-type byol --disk-containers file:///path/to/DetectionLab/Working/Terraform/vm_import/win10.json
+    ```
 
 ### Terraform!
 

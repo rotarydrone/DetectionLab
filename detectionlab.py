@@ -55,7 +55,7 @@ def replace_provision_vars(config_json):
     config = config_json['provision']
     vars = ["PROVISION_USER", "PROVISION_PASSWORD", "PROVISION_DISPLAYNAME", "PROVISION_ORG_NAME",\
             "PROVISION_WIN10_ISO", "PROVISION_WIN2016_ISO", \
-             "PROVISION_AWS_REGION", "PROVISION_AWS_PROFILE", "PROVISION_AWS_CREDENTIALS_FILE",\
+             "PROVISION_AWS_REGION", "PROVISION_AWS_PROFILE", "PROVISION_AWS_CREDENTIALS_FILE", "PROVISION_AWS_S3BUCKET",\
                  "PROVISION_SSH_KEY_NAME", "PROVISION_SSH_KEY_PUB", "PROVISION_SSH_KEY", "PROVISION_WHITELIST_IP"] 
 
     for var in vars: 
@@ -138,7 +138,17 @@ def delete_s3_bucket(bucket_name, aws_profile):
 
     s3_del_response = s3.delete_bucket(Bucket=bucket_name)
     print("[+] Successfuly deleted S3 bucket %s" % bucket_name)
-    
+
+def upload_ova_to_s3(bucket_name, aws_profile, local_file, s3_key):
+    session = boto3.Session(profile_name=aws_profile)
+
+    s3 = session.client('s3')
+
+    s3_upload_response = s3.upload_file(local_file, bucket_name, s3_key)
+
+def import_ami_from_s3():
+    pass
+
 def download_file(url, filename):
     local_filename = filename
     with requests.get(url, stream=True) as r:
@@ -157,41 +167,74 @@ def do_configure(config_json):
     replace_host_ip_vars(config_json)
     replace_analystlogin_vars(config_json)
 
-def do_download():
+def do_download(dest_dir):
 
     windows_2016_iso = "https://software-download.microsoft.com/download/pr/Windows_Server_2016_Datacenter_EVAL_en-us_14393_refresh.ISO"
     windows_10_iso = "https://software-download.microsoft.com/download/pr/18362.30.190401-1528.19h1_release_svc_refresh_CLIENTENTERPRISEEVAL_OEMRET_x64FRE_en-us.iso"
 
     print("[+] Downloading Windows 10 Enterprise Eval ISO")
-    download_file(windows_10_iso, "./iso/windows_10.iso")
+    download_file(windows_10_iso, dest_dir + "/windows_10.iso")
 
     print("[+] Downloading Windows Server 2016 Eval ISO")
-    download_file(windows_2016_iso, "./iso/windows_2016.iso")
+    download_file(windows_2016_iso, dest_dir + "/windows_2016.iso")
 
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description="DetectionLab Deployment Helper")
+    subparsers = parser.add_subparsers(dest='subcommand')
+    
+    iso_up_subparser = subparsers.add_parser('ova-to-s3')
+    iso_up_subparser.add_argument("--config-file" , "-c", dest='config_file', default="config.json", help="Path to Config File, defaults to ./config.json" )
+    iso_up_subparser.add_argument("--ova-path" , "-o", dest='local_file', help="Path to OVA file", required=True )
+    iso_up_subparser.add_argument("--s3-key" , "-d", dest='s3_key', help="S3 Key Name", required=True )
 
-    group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument("--configure", action='store_true', dest='configure', help="Configure DetectionLab")
-    group.add_argument("--download-iso", action='store_true', dest='download-iso', help="Download Windows Trial ISO")
-    group.add_argument("--create-s3-bucket", action='store_true', dest='create-s3-bucket', help="Create S3 Bucket for AMI Import")
-    group.add_argument("--delete-s3-bucket", action='store_true', dest='delete-s3-bucket',help="Delete S3 bucket")
+    config_subparser = subparsers.add_parser('configure')
+    config_subparser.add_argument("--config-file" , "-c", dest='config_file', default="config.json", help="Path to Config File, defaults to ./config.json" )
+
+    s3_manage_subparser = subparsers.add_parser('s3-manage')
+    s3_manage_subparser.add_argument("--config-file" , "-c", dest='config_file', default="config.json", help="Path to Config File, defaults to ./config.json" )
+    s3_manage_group = s3_manage_subparser.add_mutually_exclusive_group(required=True)
+    s3_manage_group.add_argument("--create" , action='store_true', help="Create S3 Bucket" )
+    s3_manage_group.add_argument("--delete" , action='store_true',  help="Delete S3 Bucket" )
+
+    iso_download_subparser = subparsers.add_parser('iso-download')
+    iso_download_subparser.add_argument("--dest-dir" , "-d", dest='dest_dir', default="./iso/", help="Destination Directory, defaults to ./iso/" )
+
+    subparsers.required = True
 
     args = vars(parser.parse_args())
+    
+    if args['subcommand'] == "ova-to-s3":
 
-    config_file = open('config.json', 'r') 
-    config_json = json.load(config_file)
+        config_file = open(args['config_file'], 'r') 
+        config_json = json.load(config_file)
 
-    if args['configure']:
+        bucket_name = config_json['provision']['PROVISION_AWS_S3BUCKET']
+        aws_profile = config_json['provision']['PROVISION_AWS_PROFILE']
+
+        local_file = args['local_file']
+        s3_key = args['s3_key']
+
+        upload_ova_to_s3(bucket_name, aws_profile, local_file, s3_key)
+
+    elif args['subcommand'] == 'configure':
+        config_file = open(args['config_file'], 'r') 
+        config_json = json.load(config_file)
         do_configure(config_json)
-    elif args['download-iso']:
-        do_download()
-    elif args['create-s3-bucket']:
+
+    elif args['subcommand'] == 's3-manage':
+
+        config_file = open(args['config_file'], 'r') 
+        config_json = json.load(config_file)
+
         bucket_name = config_json['provision']['PROVISION_AWS_S3BUCKET']
         aws_profile = config_json['provision']['PROVISION_AWS_PROFILE']
-        create_s3_bucket(bucket_name, aws_profile)
-    elif args['delete-s3-bucket']:
-        bucket_name = config_json['provision']['PROVISION_AWS_S3BUCKET']
-        aws_profile = config_json['provision']['PROVISION_AWS_PROFILE']
-        delete_s3_bucket(bucket_name, aws_profile)
+        
+        if args['create']:
+            create_s3_bucket(bucket_name, aws_profile)
+
+        elif args['delete']:
+            delete_s3_bucket(bucket_name, aws_profile)
+
+    elif args['subcommand'] == 'iso-download':
+        do_download(args['dest_dir'])
