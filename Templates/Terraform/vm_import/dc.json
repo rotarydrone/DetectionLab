@@ -3,7 +3,7 @@
     "Description": "dc",
     "Format": "ova",
     "UserBucket": {
-        "S3Bucket": "YOUR_BUCKET_GOES_HERE",
+        "S3Bucket": "PROVISION_AWS_S3BUCKET",
         "S3Key": "dc.ova"
     }
 }]
