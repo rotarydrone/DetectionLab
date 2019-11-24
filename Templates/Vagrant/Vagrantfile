@@ -158,6 +158,7 @@ Vagrant.configure("2") do |config|
     cfg.vm.provision "shell", path: "scripts/download_palantir_wef.ps1", privileged: false
     cfg.vm.provision "shell", path: "scripts/download_palantir_osquery.ps1", privileged: false
     cfg.vm.provision "shell", inline: 'wevtutil el | Select-String -notmatch "Microsoft-Windows-LiveId" | Foreach-Object {wevtutil cl "$_"}', privileged: false
+    cfg.vm.provision "shell", inline: 'net localgroup "Remote Desktop Users" "DOMAIN_NETBIOS\Domain Users" /add', privileged: false
     cfg.vm.provision "shell", path: "scripts/install-splunkuf.ps1", privileged: false
     cfg.vm.provision "shell", path: "scripts/install-utilities.ps1", privileged: false
     cfg.vm.provision "shell", path: "scripts/install-redteam.ps1", privileged: false
