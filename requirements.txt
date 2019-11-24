@@ -1,4 +1,3 @@
 requests
-shutil
-fnmatch
 massedit
+boto3

@@ -14,7 +14,8 @@
 		"PROVISION_SSH_KEY_PUB": "/home/user/.ssh/id_logger.pub", 
 		"PROVISION_AWS_CREDENTIALS_FILE": "/home/user/.aws/credentials",
 		"PROVISION_AWS_PROFILE": "terraform",
-		"PROVISION_AWS_REGION": "us-east-1"
+		"PROVISION_AWS_REGION": "us-east-1",
+		"PROVISION_AWS_S3BUCKET": "changethis"
 	},
 
 	"vagrant": { 

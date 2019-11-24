@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import requests, argparse, json, shutil, os, fnmatch, massedit
+import requests, argparse, json, shutil, os, fnmatch, massedit, boto3
 
 '''
 ToDo:
@@ -112,9 +112,33 @@ def replace_analystlogin_vars(config_json):
     for var in vars: 
         walk_and_replace(var, config["%s" % var]) 
 
-def create_s3_bucket():
-    pass
+def create_s3_bucket(bucket_name, aws_profile):
 
+    session = boto3.Session(profile_name=aws_profile)
+    s3 = session.client('s3')
+
+    s3_create_response = s3.create_bucket(Bucket=bucket_name, ACL='private')
+
+
+    s3_block_response = s3.put_public_access_block(
+        PublicAccessBlockConfiguration={
+            'BlockPublicAcls': True,
+            'IgnorePublicAcls': True,
+            'BlockPublicPolicy': True,
+            'RestrictPublicBuckets': True
+        },
+        Bucket=bucket_name
+    )
+    
+    print("[+] Successfuly created S3 bucket %s" % bucket_name)
+
+def delete_s3_bucket(bucket_name, aws_profile):
+    session = boto3.Session(profile_name=aws_profile)
+    s3 = session.client('s3')
+
+    s3_del_response = s3.delete_bucket(Bucket=bucket_name)
+    print("[+] Successfuly deleted S3 bucket %s" % bucket_name)
+    
 def download_file(url, filename):
     local_filename = filename
     with requests.get(url, stream=True) as r:
@@ -123,10 +147,7 @@ def download_file(url, filename):
 
     return local_filename
 
-def do_configure():
-
-    config_file = open('config.json', 'r') 
-    config_json = json.load(config_file)
+def do_configure(config_json):
 
     copy_templates()
     replace_provision_vars(config_json)
@@ -147,7 +168,6 @@ def do_download():
     print("[+] Downloading Windows Server 2016 Eval ISO")
     download_file(windows_2016_iso, "./iso/windows_2016.iso")
 
-
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description="DetectionLab Deployment Helper")
@@ -155,12 +175,23 @@ if __name__ == '__main__':
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--configure", action='store_true', dest='configure', help="Configure DetectionLab")
     group.add_argument("--download-iso", action='store_true', dest='download-iso', help="Download Windows Trial ISO")
-    group.add_argument("--s3-config", help="Create S3 Bucks for AMI Import")
-    group.add_argument("--s3-push", help="Upload OVA images to S3 for AMI Import")
+    group.add_argument("--create-s3-bucket", action='store_true', dest='create-s3-bucket', help="Create S3 Bucket for AMI Import")
+    group.add_argument("--delete-s3-bucket", action='store_true', dest='delete-s3-bucket',help="Delete S3 bucket")
 
     args = vars(parser.parse_args())
 
+    config_file = open('config.json', 'r') 
+    config_json = json.load(config_file)
+
     if args['configure']:
-        do_configure()
+        do_configure(config_json)
     elif args['download-iso']:
         do_download()
+    elif args['create-s3-bucket']:
+        bucket_name = config_json['provision']['PROVISION_AWS_S3BUCKET']
+        aws_profile = config_json['provision']['PROVISION_AWS_PROFILE']
+        create_s3_bucket(bucket_name, aws_profile)
+    elif args['delete-s3-bucket']:
+        bucket_name = config_json['provision']['PROVISION_AWS_S3BUCKET']
+        aws_profile = config_json['provision']['PROVISION_AWS_PROFILE']
+        delete_s3_bucket(bucket_name, aws_profile)
