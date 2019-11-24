@@ -8,11 +8,6 @@ If (-not (Test-Path "C:\ProgramData\chocolatey")) {
 }
 
 Write-Host "$('[{0:HH:mm}]' -f (Get-Date)) Installing utilities..."
-If ($(hostname) -eq "win10") {
-  # Because the Windows10 start menu sucks
-  choco install -y --limit-output --no-progress classic-shell -installArgs ADDLOCAL=ClassicStartMenu
-  & "C:\Program Files\Classic Shell\ClassicStartMenu.exe" "-xml" "c:\vagrant\resources\windows\MenuSettings.xml"
-}
 choco install -y --limit-output --no-progress NotepadPlusPlus
 choco install -y --limit-output --no-progress GoogleChrome
 choco install -y --limit-output --no-progress WinRar
