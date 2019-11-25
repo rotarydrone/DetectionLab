@@ -134,9 +134,14 @@ def create_s3_bucket(bucket_name, aws_profile):
 
 def delete_s3_bucket(bucket_name, aws_profile):
     session = boto3.Session(profile_name=aws_profile)
-    s3 = session.client('s3')
+   
+    s3 = session.resource('s3')
+    bucket = s3.Bucket(bucket_name)
+    bucket.objects.all().delete()
 
+    s3 = session.client('s3')    
     s3_del_response = s3.delete_bucket(Bucket=bucket_name)
+
     print("[+] Successfuly deleted S3 bucket %s" % bucket_name)
 
 def upload_ova_to_s3(bucket_name, aws_profile, local_file, s3_key):
@@ -195,7 +200,7 @@ if __name__ == '__main__':
     s3_manage_subparser.add_argument("--config-file" , "-c", dest='config_file', default="config.json", help="Path to Config File, defaults to ./config.json" )
     s3_manage_group = s3_manage_subparser.add_mutually_exclusive_group(required=True)
     s3_manage_group.add_argument("--create" , action='store_true', help="Create S3 Bucket" )
-    s3_manage_group.add_argument("--delete" , action='store_true',  help="Delete S3 Bucket" )
+    s3_manage_group.add_argument("--delete" , action='store_true',  help="Delete S3 Bucket and all contained objects" )
 
     iso_download_subparser = subparsers.add_parser('iso-download')
     iso_download_subparser.add_argument("--dest-dir" , "-d", dest='dest_dir', default="./iso/", help="Destination Directory, defaults to ./iso/" )
