@@ -118,14 +118,31 @@ Export the boxes to OVA files so we can upload to S3 and deploy with Terraform m
     ./detectionlab.py ova-to-s3 -o /path/to/dc.ova -d dc.ova
     ./detectionlab.py ova-to-s3 -o /path/to/wef.ova -d wef.ova
     ```
-
-3. Import the images as AMIs:
+    
+3. Create the vmimport role:
 
     ```
-    aws ec2 import-image --description "dc" --license-type byol --disk-containers file:///path/to/DetectionLab/Working/Terraform/vm_import/dc.json
-    aws ec2 import-image --description "wef" --license-type byol --disk-containers file:///path/to/DetectionLab/Working/Terraform/vm_import/wef.json
-    aws ec2 import-image --description "win10" --license-type byol --disk-containers file:///path/to/DetectionLab/Working/Terraform/vm_import/win10.json
+    aws --profile terraform iam create-role --role-name vmimport --assume-role-policy-document file:///path/to/DetectionLab/Working/Terraform/vm_import/trust-policy.json
+    aws --profile terraform iam put-role-policy --role-name vmimport --policy-name vmimport --policy-document file:///path/to/DetectionLab/Working/Terraform/vm_import/role-policy.json
     ```
+
+4. Import the OVAs
+    ```
+    aws --profile terraform ec2 import-image --description "dc" --license-type byol --disk-containers file:///path/to/DetectionLab/Working/Terraform/vm_import/dc.json
+    aws --profile terraform ec2 import-image --description "wef" --license-type byol --disk-containers file:///path/to/DetectionLab/Working/Terraform/vm_import/wef.json
+    aws --profile terraform ec2 import-image --description "win10" --license-type byol --disk-containers file:///path/to/DetectionLab/Working/Terraform/vm_import/win10.json
+    ```
+
+3. Follow the status and record AMI Ids: 
+
+    ```
+    aws --profile terraform ec2 describe-import-image-tasks --import-task-ids import-ami-xxxxxxx
+    ```
+
+4. Document AMI IDs
+
+Document the AMI ID's and store them in the config.json file. 
+Rerun `./detectionlab.py configure -c config.json` with the AMI ID's to push them to Terraform config files.
 
 ### Terraform!
 
