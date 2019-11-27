@@ -24,8 +24,8 @@
             <param name="hostname">WKSTN_IP_ADDRESS</param>
             <param name="port">3389</param>
             <param name="security">nla</param>
-            <param name="username">PROVISION_USER</param>
-            <param name="password">PROVISION_PASSWORD</param>
+            <param name="username">unprivileged</param>
+            <param name="password">Password1!</param>
             <param name="ignore-cert">true</param>
         </connection>
 
