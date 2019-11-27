@@ -1,0 +1,93 @@
+GivenName,Surname,OUPath,Group
+Haley,Brooks,"OU=Sales,OU=User Accounts,DOMAIN_DN",sg-sales
+Martha,Anderson,"OU=Sales,OU=User Accounts,DOMAIN_DN",sg-sales
+Scott,Arcuri,"OU=Sales,OU=User Accounts,DOMAIN_DN",sg-sales
+Sarah,Frank,"OU=Sales,OU=User Accounts,DOMAIN_DN",sg-sales
+Clara,Keely,"OU=Sales,OU=User Accounts,DOMAIN_DN",sg-sales
+Jeffrey,Loyd,"OU=Sales,OU=User Accounts,DOMAIN_DN",sg-sales
+Ismael,Morrison,"OU=Sales,OU=User Accounts,DOMAIN_DN",sg-sales
+Mary,Estes,"OU=Sales,OU=User Accounts,DOMAIN_DN",sg-sales
+William,Davis,"OU=Sales,OU=User Accounts,DOMAIN_DN",sg-sales
+Coral,Walton,"OU=Sales,OU=User Accounts,DOMAIN_DN",sg-sales
+Concetta,Sanchez,"OU=Sales,OU=User Accounts,DOMAIN_DN",sg-sales
+Adam,Gray,"OU=Sales,OU=User Accounts,DOMAIN_DN",sg-sales
+John,Montgomery,"OU=Sales,OU=User Accounts,DOMAIN_DN",sg-sales
+Shara,Lynde,"OU=Sales,OU=User Accounts,DOMAIN_DN",sg-sales
+Dorothy,Walker,"OU=Sales,OU=User Accounts,DOMAIN_DN",sg-sales
+Jose,Reyes,"OU=Sales,OU=User Accounts,DOMAIN_DN",sg-sales
+Nora,Wagner,"OU=Sales,OU=User Accounts,DOMAIN_DN",sg-sales
+Michael,Borges,"OU=Sales,OU=User Accounts,DOMAIN_DN",sg-sales
+Allison,Stanley,"OU=Sales,OU=User Accounts,DOMAIN_DN",sg-sales
+Joanne,Vasquez,"OU=Sales,OU=User Accounts,DOMAIN_DN",sg-sales
+Carol,Matthews,"OU=Sales,OU=User Accounts,DOMAIN_DN",sg-sales
+Laura,Lopez,"OU=Marketing,OU=User Accounts,DOMAIN_DN",sg-marketing
+Vicky,Escalante,"OU=Marketing,OU=User Accounts,DOMAIN_DN",sg-marketing
+Maria,Shields,"OU=Marketing,OU=User Accounts,DOMAIN_DN",sg-marketing
+Krystal,Simpson,"OU=Marketing,OU=User Accounts,DOMAIN_DN",sg-marketing
+Lamont,Flores,"OU=Marketing,OU=User Accounts,DOMAIN_DN",sg-marketing
+Rudy,Gibson,"OU=Marketing,OU=User Accounts,DOMAIN_DN",sg-marketing
+Daniel,Somers,"OU=Marketing,OU=User Accounts,DOMAIN_DN",sg-marketing
+Brittany,Crooks,"OU=Marketing,OU=User Accounts,DOMAIN_DN",sg-marketing
+Ruth,Boyles,"OU=Marketing,OU=User Accounts,DOMAIN_DN",sg-marketing
+Brian,Johnson,"OU=Marketing,OU=User Accounts,DOMAIN_DN",sg-marketing
+Mamie,Burke,"OU=Marketing,OU=User Accounts,DOMAIN_DN",sg-marketing
+Teresa,Kennedy,"OU=Marketing,OU=User Accounts,DOMAIN_DN",sg-marketing
+Gloria,Wright,"OU=Marketing,OU=User Accounts,DOMAIN_DN",sg-marketing
+Anita,Brister,"OU=Marketing,OU=User Accounts,DOMAIN_DN",sg-marketing
+John,Trisler,"OU=Marketing,OU=User Accounts,DOMAIN_DN",sg-marketing
+Clarice,Blizzard,"OU=Marketing,OU=User Accounts,DOMAIN_DN",sg-marketing
+Ida,Conway,"OU=Marketing,OU=User Accounts,DOMAIN_DN",sg-marketing
+Richard,Miller,"OU=Marketing,OU=User Accounts,DOMAIN_DN",sg-marketing
+Nga,Figueroa,"OU=Marketing,OU=User Accounts,DOMAIN_DN",sg-marketing
+Jesse,Lanier,"OU=Marketing,OU=User Accounts,DOMAIN_DN",sg-marketing
+Carol,Mackin,"OU=Marketing,OU=User Accounts,DOMAIN_DN",sg-marketing
+Linda,Burden,"OU=Marketing,OU=User Accounts,DOMAIN_DN",sg-marketing
+Kevin,Carnahan,"OU=Marketing,OU=User Accounts,DOMAIN_DN",sg-marketing
+Janice,Osburn,"OU=Marketing,OU=User Accounts,DOMAIN_DN",sg-marketing
+Dustin,Carrero,"OU=Marketing,OU=User Accounts,DOMAIN_DN",sg-marketing
+Gloria,Davis,"OU=Marketing,OU=User Accounts,DOMAIN_DN",sg-marketing
+Clarence,Hinton,"OU=Marketing,OU=User Accounts,DOMAIN_DN",sg-marketing
+Therese,Dykes,"OU=Marketing,OU=User Accounts,DOMAIN_DN",sg-marketing
+Donald,Roth,"OU=Marketing,OU=User Accounts,DOMAIN_DN",sg-marketing
+Angelia,Snyder,"OU=Finance,OU=User Accounts,DOMAIN_DN",sg-finance
+Anthony,Knowlton,"OU=Finance,OU=User Accounts,DOMAIN_DN",sg-finance
+Karl,Bragg,"OU=Finance,OU=User Accounts,DOMAIN_DN",sg-finance
+Randy,Sanchez,"OU=Finance,OU=User Accounts,DOMAIN_DN",sg-finance
+Guadalupe,Avilla,"OU=Finance,OU=User Accounts,DOMAIN_DN",sg-finance
+Hermina,Bowlin,"OU=Finance,OU=User Accounts,DOMAIN_DN",sg-finance
+Michael,Pederson,"OU=Finance,OU=User Accounts,DOMAIN_DN",sg-finance
+Belinda,Jackson,"OU=Finance,OU=User Accounts,DOMAIN_DN",sg-finance
+Julie,Huber,"OU=Finance,OU=User Accounts,DOMAIN_DN",sg-finance
+Robert,West,"OU=Finance,OU=User Accounts,DOMAIN_DN",sg-finance
+Donna,Williams,"OU=Finance,OU=User Accounts,DOMAIN_DN",sg-finance
+Kevin,Latch,"OU=Finance,OU=User Accounts,DOMAIN_DN",sg-finance
+Melissa,Young,"OU=Finance,OU=User Accounts,DOMAIN_DN",sg-finance
+Linda,Davis,"OU=Information Technology,OU=User Accounts,DOMAIN_DN",sg-it-helpdesk
+Chandra,Quezada,"OU=Information Technology,OU=User Accounts,DOMAIN_DN",sg-it-helpdesk
+Fred,Brown,"OU=Information Technology,OU=User Accounts,DOMAIN_DN",sg-infosec
+Karen,McMillian,"OU=Information Technology,OU=User Accounts,DOMAIN_DN",sg-infosec
+Sherrie,Ford,"OU=Information Technology,OU=User Accounts,DOMAIN_DN",sg-infosec
+Timothy,Shatley,"OU=Information Technology,OU=User Accounts,DOMAIN_DN",sg-infosec
+Karen,Newberry,"OU=Information Technology,OU=User Accounts,DOMAIN_DN",sg-it-helpdesk
+Maricela,Roberts,"OU=Information Technology,OU=User Accounts,DOMAIN_DN",sg-it-helpdesk
+Jenny,Kirby,"OU=Information Technology,OU=User Accounts,DOMAIN_DN",sg-it-helpdesk
+Cindy,Reynolds,"OU=Information Technology,OU=User Accounts,DOMAIN_DN",sg-it-helpdesk
+Douglas,Parker,"OU=Information Technology,OU=User Accounts,DOMAIN_DN",sg-it-helpdesk
+Margaret,Bergstrom,"OU=Finance,OU=User Accounts,DOMAIN_DN",sg-finance
+Juan,Craven,"OU=Finance,OU=User Accounts,DOMAIN_DN",sg-finance
+Joshua,Arnold,"OU=Finance,OU=User Accounts,DOMAIN_DN",sg-finance
+Lillie,Olson,"OU=Finance,OU=User Accounts,DOMAIN_DN",sg-finance
+Elizabeth,Crockett,"OU=Finance,OU=User Accounts,DOMAIN_DN",sg-finance
+Jimmy,Salinas,"OU=Finance,OU=User Accounts,DOMAIN_DN",sg-finance
+Brad,Granados,"OU=Finance,OU=User Accounts,DOMAIN_DN",sg-finance
+Patricia,Rodgers,"OU=Finance,OU=User Accounts,DOMAIN_DN",sg-finance
+Mary,Brown,"OU=Finance,OU=User Accounts,DOMAIN_DN",sg-finance
+Brandi,Franz,"OU=Finance,OU=User Accounts,DOMAIN_DN",sg-finance
+Patricia,Rouse,"OU=Finance,OU=User Accounts,DOMAIN_DN",sg-finance
+Joann,Morgan,"OU=Finance,OU=User Accounts,DOMAIN_DN",sg-finance
+Kayla,Rivera,"OU=Finance,OU=User Accounts,DOMAIN_DN",sg-finance
+Thomas,Smith,"OU=Finance,OU=User Accounts,DOMAIN_DN",sg-finance
+Tina,Westlund,"OU=Finance,OU=User Accounts,DOMAIN_DN",sg-finance
+Mary,Obrien,"OU=Finance,OU=User Accounts,DOMAIN_DN",sg-finance
+Christina,Bump,"OU=Finance,OU=User Accounts,DOMAIN_DN",sg-finance
+Brenda,Reeves,"OU=Finance,OU=User Accounts,DOMAIN_DN",sg-finance
