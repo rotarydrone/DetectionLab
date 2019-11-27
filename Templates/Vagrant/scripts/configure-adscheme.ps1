@@ -1,6 +1,5 @@
 # Purpose : Create Active Directory user and service accounts and OU structure 
 
-
 Write-Host "$('[{0:HH:mm}]' -f (Get-Date)) Checking AD services status..."
 $svcs = "adws","dns","kdc","netlogon"
 Get-Service -name $svcs -ComputerName localhost | Select Machinename,Name,Status
@@ -8,8 +7,7 @@ Get-Service -name $svcs -ComputerName localhost | Select Machinename,Name,Status
 # Force AdminSDHolder to propogate more frequently... otherwise AdminCount flag will not be set in a timely fashion (once a minute)
 Set-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\NTDS\Parameters -Value 60 -Name AdminSDProtectFrequency
 
-
-# OUs
+# Create OUs
 New-ADOrganizationalUnit -Name "User Accounts" -Path "DOMAIN_DN" 
 New-ADOrganizationalUnit -Name "Service Accounts" -Path "DOMAIN_DN" 
 New-ADOrganizationalUnit -Name "Groups" -Path "DOMAIN_DN" 
@@ -28,21 +26,30 @@ New-ADGroup -Name "sg-sales" -SamAccountName sg-sales -GroupCategory Security -G
 
 Add-ADGroupMember -Identity "Administrators" -Members "sg-infosec"
 
-# Service Accounts 
+# Import Fake Users to domain from CSV template
+$FakeUsers = Import-CSV "C:\vagrant\resources\windows\fakenamegenerator.csv"
+
+foreach ($fakeuser in $FakeUsers){
+    $username = -join($fakeuser.GivenName[0], $fakeuser.Surname)
+    $username = $username.ToLower()
+
+    Write-Host $username $fakeuser.OUPath
+    
+    New-ADUser -Name $username -Path $fakeuser.OUPath.Replace('"', '') -PasswordNeverExpires $true -Enabled $true -DisplayName $username -GivenName $fakeuser.GivenName -SurName $fakeuser.SurName -AccountPassword (ConvertTo-SecureString "Password1!" -AsPlainText -Force)
+    Add-ADGroupMember -Identity $fakeuser.Group -Members $username
+}
+
+
+# Add marketing user for Gaucamole autologon
+New-ADUser -Name "unprivileged" -Path "OU=Sales,OU=User Accounts,DOMAIN_DN"  -PasswordNeverExpires $true -Enabled $true -DisplayName "unprivileged" -GivenName "Unprivileged" -SurName "User" -AccountPassword (ConvertTo-SecureString "Password1!" -AsPlainText -Force)
+Add-ADGroupMember -Identity "sg-sales" -Members "unprivileged"
+
+# Add Service Accounts
 
 ## svcsql service account 
-## kerberoastable
+## kerberoastable + Admin
 New-ADUser -Name "svcsql" -PasswordNeverExpires $true -Enabled $true -Path "OU=Service Accounts,DOMAIN_DN"  -Description "MSSQL Service Account" -ServicePrincipalNames "MSSQLSvc/sql.rotary.lab:1433" -AccountPassword (ConvertTo-SecureString "Password1!" -AsPlainText -Force)
 Add-ADGroupMember -Identity "Administrators" -Members "svcsql"
-
-## misc service accounts
-New-ADUser -Name "svciis" -PasswordNeverExpires $true -Enabled $true -Path "OU=Service Accounts,DOMAIN_DN"  -Description "IIS Service Account" -ServicePrincipalNames "HTTP/web.rotary.lab" -AccountPassword (ConvertTo-SecureString "Password1!" -AsPlainText -Force)
-New-ADUser -Name "svcftp" -PasswordNeverExpires $true -Enabled $true -Path "OU=Service Accounts,DOMAIN_DN"  -Description "FTP Transfer Account" -AccountPassword (ConvertTo-SecureString "Password1!" -AsPlainText -Force)
-New-ADUser -Name "svcwebapp" -PasswordNeverExpires $true -Enabled $true -Path "OU=Service Accounts,DOMAIN_DN"  -Description "WebApp Service Account" -AccountPassword (ConvertTo-SecureString "Password1!" -AsPlainText -Force)
-
-## Backup Operator Account
-New-ADUser -Name "svcbackup" -PasswordNeverExpires $true -Enabled $true -Path "OU=Service Accounts,DOMAIN_DN"  -Description "Backup Admin Service Account" -AccountPassword (ConvertTo-SecureString "Password1!" -AsPlainText -Force)
-Add-ADGroupMember -Identity "Backup Operators" -Members "svcbackup"
 
 ## Account Operator Account
 ## AS-REP Roastable
@@ -50,31 +57,14 @@ New-ADUser -Name "svciam" -PasswordNeverExpires $true -Enabled $true -Path "OU=S
 Add-ADGroupMember -Identity "Account Operators" -Members "svciam"
 Set-ADAccountControl -Identity "svciam" -doesnotrequirepreauth $true
 
-# Finance Users
-New-ADUser -Name "andy.dufresne" -PasswordNeverExpires $true -Enabled $true -Path "OU=Finance,OU=User Accounts,DOMAIN_DN"  -DisplayName "Andy Dufresne" -GivenName "Andy" -SurName "Dufresne" -AccountPassword (ConvertTo-SecureString "Password1!" -AsPlainText -Force)
-New-ADUser -Name "skyler.white" -PasswordNeverExpires $true -Enabled $true -Path "OU=Finance,OU=User Accounts,DOMAIN_DN"  -DisplayName "Skyler White" -GivenName "Skyler" -SurName "White" -AccountPassword (ConvertTo-SecureString "Password1!" -AsPlainText -Force)
-Add-ADGroupMember -Identity "sg-finance" -Members andy.dufresne,skyler.white
+## Backup Operator Account
+New-ADUser -Name "svcbackup" -PasswordNeverExpires $true -Enabled $true -Path "OU=Service Accounts,DOMAIN_DN"  -Description "Backup Admin Service Account" -AccountPassword (ConvertTo-SecureString "Password1!" -AsPlainText -Force)
+Add-ADGroupMember -Identity "Backup Operators" -Members "svcbackup"
 
-# Marketing Users
-New-ADUser -Name "don.draper" -PasswordNeverExpires $true -Enabled $true -Path "OU=Marketing,OU=User Accounts,DOMAIN_DN"  -DisplayName "Don Draper" -GivenName "Dick" -SurName "Whitman" -AccountPassword (ConvertTo-SecureString "Password1!" -AsPlainText -Force)
-New-ADUser -Name "peggy.olson" -PasswordNeverExpires $true -Enabled $true -Path "OU=Marketing,OU=User Accounts,DOMAIN_DN"  -DisplayName "Peggy Olson" -GivenName "Peggy" -SurName "Olson" -AccountPassword (ConvertTo-SecureString "Password1!" -AsPlainText -Force)
-New-ADUser -Name "ted.chaugh" -PasswordNeverExpires $true -Enabled $true -Path "OU=Marketing,OU=User Accounts,DOMAIN_DN"  -DisplayName "Ted Chaugh" -GivenName "Ted" -SurName "Chaugh" -AccountPassword (ConvertTo-SecureString "Password1!" -AsPlainText -Force)
-Add-ADGroupMember -Identity "sg-marketing" -Members don.draper, peggy.olson, ted.chaugh
-
-# Sales Users
-New-ADUser -Name "andy.bernard" -PasswordNeverExpires $true -Enabled $true -Path "OU=Sales,OU=User Accounts,DOMAIN_DN"  -DisplayName "Andy Bernard" -GivenName "Andy" -SurName "Bernard" -AccountPassword (ConvertTo-SecureString "Password1!" -AsPlainText -Force)
-New-ADUser -Name "jim.halpert" -PasswordNeverExpires $true -Enabled $true -Path "OU=Sales,OU=User Accounts,DOMAIN_DN"  -DisplayName "Jim Halpert" -GivenName "Jim" -SurName "Halpert" -AccountPassword (ConvertTo-SecureString "Password1!" -AsPlainText -Force)
-New-ADUser -Name "dwight.schrute" -PasswordNeverExpires $true -Enabled $true -Path "OU=Sales,OU=User Accounts,DOMAIN_DN"  -DisplayName "Dwight Schrute" -GivenName "Dwight" -SurName "Schrute" -AccountPassword (ConvertTo-SecureString "Password1!" -AsPlainText -Force)
-Add-ADGroupMember -Identity "sg-sales" -Members andy.bernard, jim.halpert, dwight.schrute
-
-# IT Users
-New-ADUser -Name "roy" -PasswordNeverExpires $true -Enabled $true -Path "OU=Information Technology,OU=User Accounts,DOMAIN_DN"  -DisplayName "Roy" -GivenName "Roy" -SurName "" -AccountPassword (ConvertTo-SecureString "Password1!" -AsPlainText -Force)
-New-ADUser -Name "moss" -PasswordNeverExpires $true -Enabled $true -Path "OU=Information Technology,OU=User Accounts,DOMAIN_DN"  -DisplayName "Moss" -GivenName "Maurice" -SurName "Moss" -AccountPassword (ConvertTo-SecureString "Password1!" -AsPlainText -Force)
-New-ADUser -Name "richmond" -PasswordNeverExpires $true -Enabled $true -Path "OU=Information Technology,OU=User Accounts,DOMAIN_DN"  -DisplayName "Richmond" -GivenName "Richmond" -SurName "Avenal" -AccountPassword (ConvertTo-SecureString "Password1!" -AsPlainText -Force)
-New-ADUser -Name "jen" -PasswordNeverExpires $true -Enabled $true -Path "OU=Information Technology,OU=User Accounts,DOMAIN_DN"  -DisplayName "Jen" -GivenName "Jen" -SurName "Barber" -AccountPassword (ConvertTo-SecureString "Password1!" -AsPlainText -Force)
-Add-ADGroupMember -Identity "sg-it-helpdesk" -Members roy, moss, jen
-Add-ADGroupMember -Identity "sg-infosec" -Members richmond, roy
-
+## misc service accounts
+New-ADUser -Name "svciis" -PasswordNeverExpires $true -Enabled $true -Path "OU=Service Accounts,DOMAIN_DN"  -Description "IIS Service Account" -ServicePrincipalNames "HTTP/web.rotary.lab" -AccountPassword (ConvertTo-SecureString "Password1!" -AsPlainText -Force)
+New-ADUser -Name "svcftp" -PasswordNeverExpires $true -Enabled $true -Path "OU=Service Accounts,DOMAIN_DN"  -Description "FTP Transfer Account" -AccountPassword (ConvertTo-SecureString "Password1!" -AsPlainText -Force)
+New-ADUser -Name "svcwebapp" -PasswordNeverExpires $true -Enabled $true -Path "OU=Service Accounts,DOMAIN_DN"  -Description "WebApp Service Account" -AccountPassword (ConvertTo-SecureString "Password1!" -AsPlainText -Force)
 
 # Make some vulnerable ACLs
 
