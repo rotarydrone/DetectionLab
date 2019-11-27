@@ -166,7 +166,7 @@ resource "aws_instance" "logger" {
   subnet_id              = aws_subnet.default.id
   vpc_security_group_ids = [aws_security_group.logger.id]
   key_name               = aws_key_pair.auth.key_name
-  private_ip             = "172.16.42.5"
+  private_ip             = "LOGGER_IP_ADDRESS"
 
   # Provision the AWS Ubuntu 16.04 AMI from scratch.
   provisioner "remote-exec" {
